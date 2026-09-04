@@ -1,0 +1,128 @@
+/* ------------------------------------------------------------------
+   Cyber Factory — design tokens
+   Values taken from the approved Figma file (section "Favorite"):
+   surface #0c0c0c · accent #c1a875 · foreground #fafafa · muted #a3a3a3
+   type family Geist / Geist Mono
+   ------------------------------------------------------------------ */
+
+:root,
+[data-theme='dark'] {
+  --cf-bg: #0c0c0c;
+  --cf-bg-deep: #080808;
+  --cf-surface: #101010;
+  --cf-surface-2: #171614;
+  --cf-elevated: #1d1d1d;
+  --cf-input: rgba(255, 255, 255, 0.045);
+  --cf-input-hover: rgba(255, 255, 255, 0.075);
+
+  --cf-bg-glass: rgba(12, 12, 12, 0.62);
+
+  --cf-line: #1f1f1e;
+  --cf-line-strong: #2e2c29;
+  --cf-line-gold: rgba(193, 168, 117, 0.32);
+
+  --cf-text: #fafafa;
+  --cf-muted: #a3a3a3;
+  --cf-faint: #6e6e6a;
+
+  --cf-gold: #c1a875;
+  --cf-gold-bright: #d8c093;
+  --cf-gold-dim: #8b7956;
+  --cf-gold-wash: rgba(193, 168, 117, 0.09);
+  --cf-gold-wash-2: rgba(193, 168, 117, 0.16);
+
+  --cf-good: #7fb995;
+  --cf-warn: #d8a657;
+
+  --cf-glow: radial-gradient(
+    1200px 620px at 78% 8%,
+    rgba(193, 168, 117, 0.14),
+    transparent 62%
+  );
+}
+
+[data-theme='light'] {
+  --cf-bg: #f6f4f0;
+  --cf-bg-deep: #efece6;
+  --cf-surface: #ffffff;
+  --cf-surface-2: #f3f0ea;
+  --cf-elevated: #ffffff;
+  --cf-input: rgba(12, 12, 12, 0.045);
+  --cf-input-hover: rgba(12, 12, 12, 0.075);
+
+  --cf-bg-glass: rgba(246, 244, 240, 0.74);
+
+  --cf-line: #e3ded4;
+  --cf-line-strong: #cec7b9;
+  --cf-line-gold: rgba(139, 121, 86, 0.4);
+
+  --cf-text: #14130f;
+  --cf-muted: #5f5c55;
+  --cf-faint: #8a867c;
+
+  --cf-gold: #8b7956;
+  --cf-gold-bright: #6f6144;
+  --cf-gold-dim: #a3906a;
+  --cf-gold-wash: rgba(139, 121, 86, 0.08);
+  --cf-gold-wash-2: rgba(139, 121, 86, 0.16);
+
+  --cf-glow: radial-gradient(
+    1200px 620px at 78% 8%,
+    rgba(139, 121, 86, 0.1),
+    transparent 62%
+  );
+}
+
+:root {
+  --cf-font: 'PP Mori', 'Geist', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --cf-font-ui: 'Neue Montreal', 'PP Mori', ui-sans-serif, system-ui, sans-serif;
+  --cf-mono: 'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+
+  --cf-r-sm: 6px;
+  --cf-r-md: 8px;
+  --cf-r-lg: 10px;
+  --cf-r-xl: 14px;
+  --cf-r-full: 9999px;
+
+  --cf-topbar-h: 72px;
+  --cf-section-pad: 170px; /* vertical rhythm for every section but the hero */
+  /* Header gutter (48px at the 1440 comp). The homepage sections
+     override this to 120px so their content measures 1200px, per
+     Figma 122:14876. */
+  --cf-gutter: clamp(20px, 3.3vw, 48px);
+  --cf-max: 1440px;
+
+  /* Figma 122:14876 ---------------------------------------------- */
+  --cf-page-gutter: clamp(20px, 8.34vw, 120px); /* 1200px content at 1440 */
+  /* Measure of every section headline block. The comp's frame is
+     620px; 640 is carried here because Chrome sets "Why it matters.
+     Build once." about 6px wider than Figma does, and at 620 that one
+     line breaks a word early. */
+  --cf-hblock: 640px;
+  --cf-block-gap: 56px;    /* headline block -> content */
+  --cf-head-gap: 24px;     /* headline -> subline */
+
+  --cf-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --cf-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  /* the two easings the motion references lean on */
+  --cf-ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --cf-ease-soft: cubic-bezier(0.12, 0.23, 0.5, 1);
+}
+
+/* ---- hero (Figma 94:19741) ---- */
+:root {
+  --cf-cta: #ccae70;          /* filled Launch button + outline label */
+  --cf-cta-border: rgba(204, 174, 112, 0.15);
+  --cf-cta-fg: #0b0d10;
+  --cf-lamp-warm: rgba(234, 204, 160, 0.4);
+  --cf-title-dim: #8b8c89;    /* "Factory" — the half left in shadow */
+  --cf-on-dark: rgba(255, 255, 255, 0.8);
+  --cf-field: rgba(255, 255, 255, 0.05);
+  --cf-r-xs: 2px;             /* search field, CTA and card corners */
+
+  /* buttons and cards (122:19848 / 122:19851 / 122:19897) */
+  --cf-cta-ghost: #181818;              /* secondary button ground */
+  --cf-card-line: rgba(255, 255, 255, 0.1);
+  --cf-sub: rgba(255, 255, 255, 0.7);   /* hero and section sublines */
+  --cf-section-line: rgba(193, 168, 117, 0.1); /* 1px rule above each section */
+}

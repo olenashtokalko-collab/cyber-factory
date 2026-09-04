@@ -1,0 +1,387 @@
+* { box-sizing: border-box; }
+
+html, body, #root { height: 100%; margin: 0; }
+
+body {
+  background: var(--cf-bg);
+  color: var(--cf-text);
+  font-family: var(--cf-font);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: none; padding: 0; cursor: pointer; }
+img, svg, video { display: block; max-width: 100%; }
+
+:focus-visible {
+  outline: 2px solid var(--cf-gold);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+h1, h2, h3, h4 { margin: 0; font-weight: 400; letter-spacing: -0.02em; }
+p { margin: 0; }
+
+/* ---------- shared type utilities ---------- */
+
+.cf-eyebrow {
+  font-family: var(--cf-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cf-faint);
+}
+
+.cf-eyebrow--gold { color: var(--cf-gold-dim); }
+
+.cf-mono { font-family: var(--cf-mono); }
+
+.cf-h2 {
+  font-size: clamp(30px, 3.5vw, 46px);
+  font-weight: 300;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+}
+
+.cf-h3 {
+  font-size: clamp(20px, 1.8vw, 26px);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+/* Shared section headline: lead sentence in the foreground colour,
+   the rest dropping to the dim tone. Used by every section from
+   "How it works" down, so they read as one system.
+
+   PP Mori Regular 54 / 116% / -2.8% (122:19894). The wrap is left to
+   the 620px measure of .cf-hblock, which is how the comp breaks these
+   lines — no balancing, or the breaks move. */
+.cf-headline {
+  margin: 0;
+  font-family: var(--cf-font);
+  font-weight: 400;
+  font-size: clamp(30px, 4vw, 54px);
+  line-height: 1.16;
+  letter-spacing: -0.028em;
+}
+
+/* ---- the headline block every section opens with ----
+   620px of measure, centred in the page, copy ranged left
+   (122:19867 / 122:19893 / 122:19922). */
+.cf-hblock {
+  width: min(var(--cf-hblock), 100%);
+  margin-inline: auto;
+  margin-bottom: var(--cf-block-gap);
+  display: flex;
+  flex-direction: column;
+  gap: var(--cf-head-gap);
+  text-align: left;
+}
+
+/* PP Mori Regular 20 / 135% at 70% white (122:19895) */
+.cf-subline {
+  margin: 0;
+  font-family: var(--cf-font);
+  font-weight: 400;
+  font-size: clamp(16px, 1.4vw, 20px);
+  line-height: 1.35;
+  color: var(--cf-sub);
+  opacity: 0;
+  filter: blur(7px);
+}
+
+.is-in .cf-subline {
+  animation: cf-headline-in 900ms var(--cf-ease-expo) 340ms both;
+}
+
+/* ---- item type: the pairing every card and step uses ----
+   PP Mori ExtraLight 28 / -2% over PP Mori Regular 15 / 160%. */
+.cf-item-title {
+  margin: 0;
+  font-family: var(--cf-font);
+  font-weight: 200;
+  font-size: clamp(22px, 2vw, 28px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--cf-text);
+}
+
+.cf-item-body {
+  margin: 0;
+  font-family: var(--cf-font);
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--cf-muted);
+}
+
+/* ---- the two buttons (122:19848 filled, 122:19851 ghost) ----
+   16px padding all round, 8px gap, 2px corners, PP Mori SemiBold 16. */
+.cf-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  border-radius: var(--cf-r-xs);
+  font-family: var(--cf-font);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  transition: background-color 0.15s var(--cf-ease-soft),
+    border-color 0.15s var(--cf-ease-soft), box-shadow 0.15s var(--cf-ease-soft),
+    color 0.15s var(--cf-ease-soft);
+}
+
+.cf-cta--solid {
+  background: var(--cf-cta);
+  color: var(--cf-cta-fg);
+}
+.cf-cta--solid:hover {
+  background: #d8bc84;
+  box-shadow: 0 0 0 1px rgba(204, 174, 112, 0.5), 0 8px 28px rgba(204, 174, 112, 0.22);
+}
+
+.cf-cta--ghost {
+  background: var(--cf-cta-ghost);
+  border: 1px solid var(--cf-cta-border);
+  color: var(--cf-cta);
+}
+.cf-cta--ghost:hover {
+  border-color: rgba(204, 174, 112, 0.55);
+  background: #1f1d19;
+}
+
+/* ---- tile: 1px hairline on the page ground, 2px corners ----
+   Named .cf-tile, not .cf-card: .cf-card is already the catalogue
+   card in home.css, which is imported after this file. */
+.cf-tile {
+  background: var(--cf-bg);
+  border: 1px solid var(--cf-card-line);
+  border-radius: var(--cf-r-xs);
+}
+
+.cf-headline__lead,
+.cf-headline__rest {
+  opacity: 0;
+  filter: blur(7px);
+}
+
+.cf-headline__lead { display: inline-block; color: var(--cf-text); }
+.cf-headline__rest { display: inline; color: var(--cf-title-dim); }
+
+@keyframes cf-headline-in { to { opacity: 1; filter: blur(0); } }
+
+/* ---- lit lead: the hero wordmark treatment, scaled ----
+   The frame glows "Cyber" with a 60px bloom and a 10px contact shadow
+   at 96px type. Expressed in em, the same treatment carries to the
+   54px section headlines without going heavy. */
+.cf-lit { position: relative; }
+.cf-lit > span { display: block; }
+
+.cf-lit__bloom,
+.cf-lit__shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* the comp's drop shadow: 53px at 82px type, 33px at 54px — 0.62em
+   either way — at 30% white */
+.cf-lit__bloom { text-shadow: 0 0 0.62em rgba(255, 255, 255, 0.35); }
+.cf-lit__shade { text-shadow: 0 0 0.104em rgba(0, 0, 0, 0.4); }
+.cf-lit__face { position: relative; }
+
+@keyframes cf-lit-pulse { from { opacity: 0.72; } to { opacity: 1; } }
+
+.is-in .cf-lit__bloom {
+  animation: cf-lit-pulse 9s ease-in-out 1400ms infinite alternate;
+}
+
+.is-in > .cf-headline .cf-headline__lead,
+.is-in .cf-headline > .cf-headline__lead {
+  animation: cf-headline-in 900ms var(--cf-ease-expo) 80ms both;
+}
+.is-in > .cf-headline .cf-headline__rest,
+.is-in .cf-headline > .cf-headline__rest {
+  animation: cf-headline-in 900ms var(--cf-ease-expo) 220ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cf-headline__lead,
+  .cf-headline__rest { opacity: 1; filter: none; animation: none !important; }
+  .cf-lit__bloom { animation: none !important; }
+}
+
+.cf-lede {
+  color: var(--cf-muted);
+  font-size: clamp(15px, 1.15vw, 17px);
+  line-height: 1.62;
+  font-weight: 300;
+}
+
+/* ---------- layout ---------- */
+
+.cf-app { min-height: 100%; display: flex; flex-direction: column; }
+.cf-main { flex: 1; min-width: 0; }
+
+.cf-shell {
+  width: 100%;
+  max-width: var(--cf-max);
+  margin: 0 auto;
+  padding-inline: var(--cf-gutter);
+}
+
+/* The homepage measures 1200px inside 120px gutters (122:14876).
+   Scoped to the sections so the header and the catalogue pages keep
+   the 48px gutter they were built to. */
+.hero,
+.hiw,
+.bn,
+.ag {
+  --cf-gutter: var(--cf-page-gutter);
+}
+
+.cf-section {
+  padding-block: clamp(64px, 8.5vh, 116px);
+  position: relative;
+  scroll-margin-top: calc(var(--cf-topbar-h) + 12px);
+}
+.cf-section--tight { padding-block: clamp(44px, 6vh, 76px); }
+
+.cf-section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 28px;
+  flex-wrap: wrap;
+  margin-bottom: clamp(28px, 3.6vw, 52px);
+}
+
+.cf-section-head__copy { max-width: 620px; display: grid; gap: 14px; }
+
+.cf-lede { max-width: 56ch; }
+
+/* thin rule used to separate the big blocks, matching the Figma grid */
+.cf-rule { height: 1px; background: var(--cf-line); border: 0; margin: 0; }
+
+/* ---------- buttons ---------- */
+
+.cf-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 18px;
+  border-radius: var(--cf-r-md);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  transition: background 0.18s var(--cf-ease), border-color 0.18s var(--cf-ease),
+    color 0.18s var(--cf-ease), transform 0.18s var(--cf-ease);
+}
+
+.cf-btn:active { transform: translateY(1px); }
+
+.cf-btn--primary {
+  background: var(--cf-gold);
+  color: #12100c;
+  border: 1px solid var(--cf-gold);
+}
+.cf-btn--primary:hover { background: var(--cf-gold-bright); border-color: var(--cf-gold-bright); }
+
+.cf-btn--outline {
+  border: 1px solid var(--cf-line-gold);
+  color: var(--cf-gold);
+  background: transparent;
+}
+.cf-btn--outline:hover { background: var(--cf-gold-wash); border-color: var(--cf-gold); }
+
+.cf-btn--ghost {
+  border: 1px solid var(--cf-line-strong);
+  color: var(--cf-muted);
+  background: transparent;
+}
+.cf-btn--ghost:hover { color: var(--cf-text); border-color: var(--cf-faint); }
+
+.cf-btn--sm { height: 32px; padding: 0 12px; font-size: 13px; }
+.cf-btn--lg { height: 46px; padding: 0 22px; font-size: 15px; }
+
+.cf-iconbtn {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--cf-r-md);
+  color: var(--cf-muted);
+  transition: background 0.15s, color 0.15s;
+}
+.cf-iconbtn:hover { background: var(--cf-input-hover); color: var(--cf-text); }
+
+/* ---------- small parts ---------- */
+
+.cf-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 30px;
+  padding: 0 13px;
+  border-radius: var(--cf-r-full);
+  font-size: 13px;
+  color: var(--cf-muted);
+  background: var(--cf-input);
+  transition: background 0.15s, color 0.15s;
+}
+.cf-pill:hover { color: var(--cf-text); background: var(--cf-input-hover); }
+.cf-pill--active { background: var(--cf-text); color: var(--cf-bg); }
+.cf-pill--active:hover { background: var(--cf-text); color: var(--cf-bg); }
+
+.cf-pill__dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--cf-gold);
+}
+
+.cf-tag {
+  font-size: 12px;
+  color: var(--cf-faint);
+  letter-spacing: 0.01em;
+}
+
+.cf-link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 14px;
+  color: var(--cf-muted);
+  transition: color 0.15s, gap 0.18s var(--cf-ease);
+}
+.cf-link-arrow:hover { color: var(--cf-gold); gap: 11px; }
+
+/* ---------- reveal-on-scroll ---------- */
+
+.cf-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s var(--cf-ease), transform 0.7s var(--cf-ease);
+}
+.cf-reveal.is-in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .cf-reveal { opacity: 1; transform: none; }
+}

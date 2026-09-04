@@ -1,0 +1,304 @@
+/* ==================================================================
+   How it works — Figma 122:19866.
+
+   Three columns of 310 / 500 / 310 with a hairline path above them.
+   Motion idea from Neon's branching timeline: a bright core
+   travelling the rail and leaving the passed section lit, holding a
+   second at Launch. Palette and type stay with the Cyber Factory
+   frame.
+   ================================================================== */
+
+.hiw {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding-block: var(--cf-section-pad);
+  background: var(--cf-bg);
+  border-top: 1px solid var(--cf-section-line);
+}
+
+/* ---------- diagram ---------- */
+
+/* the comp gives the steps block 32px of its own clearance under the
+   headline block's 56px */
+.hiw__track { position: relative; z-index: 1; padding-top: 32px; }
+
+/* Marker positions are the comp's own (8px, 489px and 952px on the
+   1200px measure), carried as percentages so they hold at any width. */
+.hiw__diagram {
+  position: relative;
+  height: 30px;
+  /* path -> copy (122:19870) */
+  margin-bottom: 16px;
+  --n1: 0.667%;
+  --n2: 40.75%;
+  --n3: 79.333%;
+  /* where marker 2 falls inside the marker 1 → marker 3 span; the
+     run holds here */
+  --hold: 50.95%;
+}
+
+/* marker 1 to marker 3, and no further */
+.hiw__span {
+  position: absolute;
+  left: var(--n1);
+  right: calc(100% - var(--n3));
+  top: 0;
+  bottom: 0;
+  display: block;
+}
+
+/* the dim hairline the head runs along */
+.hiw__rail {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 14px;
+  height: 1px;
+  background: rgba(193, 168, 117, 0.2);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+/* ---------- the lit run ---------- */
+
+/* clipped from the right; the clip opens as the head travels, so
+   everything inside reads as "already passed" */
+.hiw__lit {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(0 100% 0 0);
+}
+
+.hiw__lit > span { position: absolute; }
+
+/* A hairline and nothing else — the comp's "rail (lit)" is a single
+   1px run at 50% gold. The weight people read in a "thick" line is
+   almost never the line, it is the halo around it, so there is no
+   bloom and the core carries no glow. */
+.hiw__core {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 14px;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    rgba(193, 168, 117, 0.5) 0%,
+    rgba(216, 192, 147, 0.72) 10%,
+    rgba(216, 192, 147, 0.72) 100%
+  );
+}
+
+/* a slow pulse that keeps the finished line alive */
+.hiw__sweep {
+  position: absolute;
+  top: 9px;
+  left: 0;
+  width: 26%;
+  height: 14px;
+  opacity: 0;
+  background: linear-gradient(
+    to right,
+    rgba(240, 222, 186, 0) 0%,
+    rgba(240, 222, 186, 0.5) 50%,
+    rgba(240, 222, 186, 0) 100%
+  );
+  filter: blur(5px);
+}
+
+/* ---------- travelling head ---------- */
+
+.hiw__head {
+  position: absolute;
+  top: 14px;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+  border-radius: 50%;
+  background: #fff7e6;
+  box-shadow: 0 0 5px 1px rgba(240, 222, 186, 0.6);
+  opacity: 0;
+}
+
+/* ---------- markers ---------- */
+
+/* The comp's marker: an 8px gold dot, a 22px cut in the page colour
+   and a 14px ring at 50% gold. Built from stacked box-shadow spreads,
+   so it is one element and the rail passes cleanly behind it. */
+.hiw__node {
+  position: absolute;
+  top: 10px;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  border-radius: 50%;
+  background: rgba(193, 168, 117, 0.35);
+  box-shadow: 0 0 0 2.5px var(--cf-bg), 0 0 0 3.5px rgba(193, 168, 117, 0.18),
+    0 0 0 7px var(--cf-bg);
+  transform: scale(0.8);
+  opacity: 0;
+  transition: background-color 0.5s var(--cf-ease-soft), box-shadow 0.5s var(--cf-ease-soft);
+}
+
+.hiw__node--1 { left: var(--n1); }
+.hiw__node--2 { left: var(--n2); }
+.hiw__node--3 { left: var(--n3); }
+
+/* ---------- copy ---------- */
+
+/* 310 / 500 / 310 with 40px gutters — 1200 at the comp width. The
+   middle bay is wider than its copy, which sits centred in it. */
+.hiw__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 310fr 500fr 310fr;
+  gap: 40px;
+}
+
+.hiw__step {
+  display: flex;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.hiw__step--2 { justify-content: center; }
+
+.hiw__step-inner {
+  display: flex;
+  flex-direction: column;
+  /* title -> body (122:19883) */
+  gap: 10px;
+  width: 100%;
+  max-width: 310px;
+  text-align: left;
+}
+
+/* ==================================================================
+   Run — the head travels marker 1 → marker 3, holding a second at
+   marker 2, and lights each marker on arrival.
+   ================================================================== */
+
+@keyframes hiw-fade { to { opacity: 1; } }
+@keyframes hiw-rail-in { to { transform: scaleX(1); } }
+/* 1050ms to marker 2, a second held there, then 1050ms to marker 3 */
+@keyframes hiw-reveal {
+  0% { clip-path: inset(0 100% 0 0); animation-timing-function: cubic-bezier(0.33, 0, 0.2, 1); }
+  33.87% { clip-path: inset(0 49.05% 0 0); animation-timing-function: linear; }
+  66.13% { clip-path: inset(0 49.05% 0 0); animation-timing-function: cubic-bezier(0.33, 0, 0.2, 1); }
+  100% { clip-path: inset(0 0 0 0); }
+}
+@keyframes hiw-run {
+  0% { left: 0%; animation-timing-function: cubic-bezier(0.33, 0, 0.2, 1); }
+  33.87% { left: 50.95%; animation-timing-function: linear; }
+  66.13% { left: 50.95%; animation-timing-function: cubic-bezier(0.33, 0, 0.2, 1); }
+  100% { left: 100%; }
+}
+@keyframes hiw-head-in { from { opacity: 0; } 12% { opacity: 1; } 92% { opacity: 1; } to { opacity: 0; } }
+@keyframes hiw-node-in { to { opacity: 1; transform: scale(1); } }
+@keyframes hiw-step-in { to { opacity: 1; transform: none; } }
+
+@keyframes hiw-sweep {
+  0% { opacity: 0; transform: translateX(-30%); }
+  12% { opacity: 0.85; }
+  70% { opacity: 0.85; }
+  100% { opacity: 0; transform: translateX(300%); }
+}
+
+.hiw.is-in .hiw__rail { animation: hiw-rail-in 1100ms var(--cf-ease-expo) 160ms both; }
+
+/* the run itself */
+.hiw.is-in .hiw__lit { animation: hiw-reveal 3100ms linear 520ms both; }
+.hiw.is-in .hiw__head {
+  animation: hiw-run 3100ms linear 520ms both, hiw-head-in 3100ms linear 520ms both;
+}
+
+/* markers light as the head reaches them */
+.hiw.is-in .hiw__node {
+  animation: hiw-node-in 700ms var(--cf-ease-expo) both;
+}
+.hiw.is-in .hiw__node--1 { animation-delay: 420ms; }
+.hiw.is-in .hiw__node--2 { animation-delay: 1510ms; }
+.hiw.is-in .hiw__node--3 { animation-delay: 3560ms; }
+
+.hiw.is-in .hiw__node--1 { transition-delay: 520ms; }
+.hiw.is-in .hiw__node--2 { transition-delay: 1570ms; }
+.hiw.is-in .hiw__node--3 { transition-delay: 3620ms; }
+
+.hiw.is-in .hiw__node {
+  background: var(--cf-gold);
+  box-shadow: 0 0 0 2.5px var(--cf-bg), 0 0 0 3.5px rgba(193, 168, 117, 0.5),
+    0 0 0 7px var(--cf-bg);
+}
+
+/* copy follows its marker */
+.hiw.is-in .hiw__step { animation: hiw-step-in 800ms var(--cf-ease-expo) both; }
+.hiw.is-in .hiw__step--1 { animation-delay: 660ms; }
+.hiw.is-in .hiw__step--2 { animation-delay: 1710ms; }
+.hiw.is-in .hiw__step--3 { animation-delay: 3760ms; }
+
+/* once the run has landed, a slow pulse keeps the line alive */
+.hiw.is-in .hiw__sweep {
+  animation: hiw-sweep 9s ease-in-out 4700ms infinite;
+}
+
+/* ==================================================================
+   Reduced motion — the finished diagram, no run.
+   ================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .hiw .hiw__head { opacity: 0; }
+  .hiw .hiw__rail { transform: none; }
+  .hiw .hiw__lit { clip-path: inset(0 0 0 0); }
+  .hiw .hiw__node { opacity: 1; transform: none; }
+  .hiw .hiw__step { opacity: 1; transform: none; }
+  .hiw *,
+  .hiw *::before,
+  .hiw *::after { animation: none !important; transition: none !important; }
+}
+
+/* ==================================================================
+   Narrower viewports — the rail becomes vertical, which is the only
+   honest way to keep a three-stop timeline legible on a phone.
+   ================================================================== */
+
+@media (max-width: 880px) {
+  .hiw__track { padding-top: 8px; }
+  .hiw__steps { grid-template-columns: 1fr; gap: 34px; }
+  .hiw__diagram { display: none; }
+
+  .hiw__step,
+  .hiw__step--2 { justify-content: flex-start; }
+
+  .hiw__step-inner {
+    position: relative;
+    max-width: none;
+    padding-left: 30px;
+  }
+  .hiw__step-inner::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 8px;
+    bottom: -34px;
+    width: 1px;
+    background: rgba(193, 168, 117, 0.2);
+  }
+  .hiw__step--3 .hiw__step-inner::before { display: none; }
+  /* same marker as the horizontal rail, so both readings match */
+  .hiw__step-inner::after {
+    content: '';
+    position: absolute;
+    left: 1px;
+    top: 8px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--cf-gold);
+    box-shadow: 0 0 0 2.5px var(--cf-bg), 0 0 0 3.5px rgba(193, 168, 117, 0.5),
+      0 0 0 7px var(--cf-bg);
+  }
+}

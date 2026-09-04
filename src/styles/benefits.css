@@ -1,0 +1,70 @@
+/* ==================================================================
+   Benefits — Figma 122:19892.
+
+   A 2x2 grid of hairline cards, 24px apart, each 24px padded with a
+   uniform 20px rhythm inside: mark, lead, supporting line.
+   ================================================================== */
+
+.bn {
+  position: relative;
+  isolation: isolate;
+  padding-block: var(--cf-section-pad);
+  background: var(--cf-bg);
+  border-top: 1px solid var(--cf-section-line);
+}
+
+/* ---------- grid ---------- */
+
+.bn__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.bn__item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 24px;
+  opacity: 0;
+  transform: translateY(22px);
+}
+
+.bn__icon {
+  display: inline-flex;
+  color: var(--cf-gold);
+}
+
+/* ==================================================================
+   Reveal — the cards arrive in sequence behind the headline.
+   ================================================================== */
+
+@keyframes bn-item-in { to { opacity: 1; transform: none; } }
+
+.bn.is-in .bn__item {
+  animation: bn-item-in 800ms var(--cf-ease-expo) calc(480ms + var(--i) * 90ms) both;
+}
+
+/* ==================================================================
+   Reduced motion
+   ================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .bn .bn__item { opacity: 1; transform: none; }
+  .bn *,
+  .bn *::before,
+  .bn *::after { animation: none !important; }
+}
+
+/* ==================================================================
+   Narrower viewports — 2x2 becomes a single column.
+   ================================================================== */
+
+@media (max-width: 760px) {
+  .bn__grid { grid-template-columns: 1fr; gap: 16px; }
+  .bn__item { gap: 16px; padding: 20px; }
+}

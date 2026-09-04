@@ -1,0 +1,142 @@
+/* ==================================================================
+   Agents — Figma 122:19921.
+
+   Three hairline cards 16px apart on the 1200px measure: a 352x199
+   plate carrying the dot grid and the isometric mark, then 40px down
+   the name and its one-liner. Ghost "Browse all" centred below.
+   ================================================================== */
+
+.ag {
+  position: relative;
+  isolation: isolate;
+  padding-block: var(--cf-section-pad);
+  background: var(--cf-bg);
+  border-top: 1px solid var(--cf-section-line);
+}
+
+/* ---------- grid ---------- */
+
+.ag__grid {
+  position: relative;
+  z-index: 1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.ag__cell {
+  display: flex;
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.ag__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* plate -> copy (122:19926) */
+  gap: 40px;
+  width: 100%;
+  padding: 24px;
+  transition: border-color 0.25s var(--cf-ease-soft),
+    background-color 0.25s var(--cf-ease-soft);
+}
+
+.ag__card:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: #0e0e0e;
+}
+
+/* Illustration plate. The comp's dot grid runs the full plate at a
+   21px step; static CSS, since a card plate has nothing to react to. */
+.ag__plate {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 352 / 199;
+  overflow: hidden;
+  --cf-iso-line: rgba(255, 255, 255, 0.28);
+}
+
+.ag__dots {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    rgba(234, 204, 160, 0.19) 1px,
+    transparent 1px
+  );
+  background-size: 21px 21px;
+}
+
+/* 194 of the plate's 352 (122:20257) */
+.ag__art {
+  position: relative;
+  width: 55.1%;
+  height: auto;
+  transition: transform 0.5s var(--cf-ease-out);
+}
+.ag__card:hover .ag__art { transform: translateY(-4px) scale(1.04); }
+
+/* ---------- copy ---------- */
+
+.ag__text {
+  display: flex;
+  flex-direction: column;
+  /* name -> one-liner (122:20272) */
+  gap: 12px;
+}
+
+.ag__text .cf-item-title a { transition: color 0.15s var(--cf-ease-soft); }
+.ag__text .cf-item-title a:hover { color: var(--cf-cta); }
+
+/* ---------- browse all ---------- */
+
+/* centred under the row; needs a definite width for the auto margins
+   to resolve, so it is a flex box rather than inline-flex */
+.ag__browse {
+  display: flex;
+  width: fit-content;
+  margin: var(--cf-block-gap) auto 0;
+  opacity: 0;
+  transform: translateY(14px);
+}
+.ag__browse svg { transition: transform 0.2s var(--cf-ease); }
+.ag__browse:hover svg { transform: translateX(3px); }
+
+/* ==================================================================
+   Reveal
+   ================================================================== */
+
+@keyframes ag-rise { to { opacity: 1; transform: none; } }
+
+.ag.is-in .ag__browse { animation: ag-rise 750ms var(--cf-ease-expo) 900ms both; }
+.ag.is-in .ag__cell {
+  animation: ag-rise 800ms var(--cf-ease-expo) calc(400ms + var(--i) * 80ms) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ag .ag__browse,
+  .ag .ag__cell { opacity: 1; transform: none; }
+  .ag *,
+  .ag *::before,
+  .ag *::after { animation: none !important; }
+}
+
+/* ==================================================================
+   Narrower viewports
+   ================================================================== */
+
+@media (max-width: 980px) {
+  .ag__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 640px) {
+  .ag__grid { grid-template-columns: 1fr; }
+  .ag__card { gap: 24px; padding: 20px; }
+  .ag__plate { aspect-ratio: 352 / 170; }
+}

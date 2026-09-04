@@ -1,0 +1,36 @@
+/* PP Mori and Neue Montreal are the families specified in the Figma
+   hero. Both are licensed retail faces (Pangram Pangram) — these files
+   are copied from the machine's own font library for local development.
+   Swap in a licensed webfont kit before deploying anywhere public. */
+
+@font-face {
+  font-family: 'PP Mori';
+  src: url('/fonts/PPMori-Extralight.otf') format('opentype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PP Mori';
+  src: url('/fonts/PPMori-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PP Mori';
+  src: url('/fonts/PPMori-SemiBold.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue Montreal';
+  src: url('/fonts/neuemontreal-regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

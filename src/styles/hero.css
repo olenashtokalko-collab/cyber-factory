@@ -1,0 +1,202 @@
+/* ==================================================================
+   Hero — Figma 122:14877.
+
+   Ranged left on the 1200px measure, 170px of clearance below the
+   72px header. The backdrop is the agents section's dot grid on a
+   canvas, so it can answer the cursor (see DotField). Only the warm
+   core behind the type is CSS.
+   ================================================================== */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  /* Not viewport-tied: the comp's 826px is 72 + 170 + content + 170,
+     so the padding defines the height and the 170px of clearance
+     under the header holds at any window size. */
+  min-height: 640px;
+  padding: calc(var(--cf-topbar-h) + var(--cf-section-pad)) var(--cf-gutter)
+    var(--cf-section-pad);
+  display: flex;
+  /* explicit: the legacy home.css .hero block still sets column, and
+     it is imported ahead of this file */
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  background: var(--cf-bg);
+  --px: 0;
+  --py: 0;
+}
+
+/* ---------- backdrop ---------- */
+
+.hero__field {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+}
+
+/* the canvas listens for the pointer itself, so it takes events */
+.cf-dots { display: block; width: 100%; height: 100%; }
+
+/* ---------- warm core ---------- */
+.hero__core {
+  position: absolute;
+  left: 50.8%;
+  top: 91px;
+  width: min(405px, 48vw);
+  height: 432px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  /* Measured off the comp: a warm bloom peaking at ~24% alpha over a
+     352x375 footprint centred at (731, 307), with the falloff staying
+     flat through the middle and dropping away fast at the rim. The
+     stops trace that profile rather than a plain two-stop ramp, which
+     read as a hard-edged disc. */
+  background: radial-gradient(
+    closest-side,
+    rgba(255, 200, 105, 0.24) 0%,
+    rgba(255, 200, 105, 0.175) 45%,
+    rgba(255, 200, 105, 0.09) 74%,
+    rgba(255, 200, 105, 0) 100%
+  );
+}
+
+/* ---------- content ---------- */
+
+.hero__content {
+  position: relative;
+  z-index: 2;
+  width: min(1200px, 100%);
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* lockup -> CTAs (122:19841) */
+  gap: 56px;
+}
+
+.hero__lockup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* title -> paragraph (122:19842) */
+  gap: 32px;
+}
+
+/* PP Mori Regular 82 / 94.6px / -3% at the 1440 comp width */
+.hero__title {
+  margin: 0;
+  font-family: var(--cf-font);
+  font-weight: 400;
+  font-size: clamp(30px, 5.7vw, 82px);
+  line-height: 1.154;
+  letter-spacing: -0.03em;
+  text-align: left;
+  color: #fff;
+}
+
+/* one block per sentence: the lit line's stacked copies then wrap the
+   same way its face does, at any width */
+.hero__line {
+  display: block;
+  opacity: 0;
+  transform: translateY(26px);
+  filter: blur(9px);
+}
+
+.hero__line--dim { color: var(--cf-title-dim); }
+
+.hero__sub {
+  margin: 0;
+  max-width: min(858px, 100%);
+  font-family: var(--cf-font);
+  font-weight: 400;
+  font-size: clamp(16px, 1.4vw, 20px);
+  line-height: 1.5;
+  text-align: left;
+  color: var(--cf-sub);
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.hero__ctas {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* the button faces live in base.css (.cf-cta); the hero only stages
+   their entrance */
+.hero__cta {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+/* ==================================================================
+   Entrance — staged, expo-out, once. ~0.1s → 1.9s.
+   ================================================================== */
+
+@keyframes hero-fade { to { opacity: 1; } }
+
+@keyframes hero-rise {
+  to { opacity: 1; transform: none; filter: blur(0); }
+}
+
+.hero.is-lit .hero__field { animation: hero-fade 1800ms var(--cf-ease-soft) 100ms both; }
+/* the lit sentence leads now, so it rises first */
+.hero.is-lit .hero__line--lit { animation: hero-rise 950ms var(--cf-ease-expo) 500ms both; }
+.hero.is-lit .hero__line--dim { animation: hero-rise 950ms var(--cf-ease-expo) 620ms both; }
+
+/* the shared lit treatment pulses on .is-in; the hero uses .is-lit */
+.hero.is-lit .cf-lit__bloom {
+  animation: cf-lit-pulse 9s ease-in-out 1900ms infinite alternate;
+}
+.hero.is-lit .hero__sub { animation: hero-rise 850ms var(--cf-ease-expo) 850ms both; }
+.hero.is-lit .cf-cta--solid { animation: hero-rise 700ms var(--cf-ease-expo) 1050ms both; }
+.hero.is-lit .cf-cta--ghost { animation: hero-rise 700ms var(--cf-ease-expo) 1130ms both; }
+
+/* ==================================================================
+   Reduced motion / no-JS — land on the finished frame.
+   ================================================================== */
+
+.hero.is-still .hero__field { opacity: 1; }
+.hero.is-still .hero__line,
+.hero.is-still .hero__sub,
+.hero.is-still .hero__cta { opacity: 1; transform: none; filter: none; }
+.hero.is-still * { animation: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero .hero__field { opacity: 1; }
+  .hero .hero__line,
+  .hero .hero__sub,
+  .hero .hero__cta { opacity: 1; transform: none; filter: none; }
+  .hero *,
+  .hero *::before,
+  .hero *::after { animation: none !important; }
+}
+
+/* ==================================================================
+   Narrower viewports
+   ================================================================== */
+
+@media (max-width: 1080px) {
+  .hero__content { gap: 48px; }
+  .hero__lockup { gap: 28px; }
+}
+
+@media (max-width: 820px) {
+  .hero { min-height: 560px; }
+  .hero__content { gap: 40px; }
+  .hero__core { top: 60px; height: 340px; }
+}
+
+@media (max-width: 560px) {
+  .hero { padding-top: calc(var(--cf-topbar-h) + 96px); padding-bottom: 96px; }
+  .hero__title { line-height: 1.08; }
+  .hero__content { gap: 32px; }
+  .hero__lockup { gap: 20px; }
+  .hero__ctas { flex-direction: column; align-items: stretch; width: 100%; max-width: 320px; }
+}
